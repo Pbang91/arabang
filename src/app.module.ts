@@ -3,9 +3,36 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
+import { CategoiresModule } from './categoires/categoires.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { Users } from './users/users.entity';
+import configuration from './config/configuration';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), UsersModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      ignoreEnvFile: true,
+      envFilePath: ['.dev.env'],
+      load: [configuration]
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'mysql',
+        host: configService.get('host'),
+        port: configService.get('port'),
+        username: configService.get('username'),
+        password: configService.get('password'),
+        database: configService.get('database'),
+        entities: [Users],
+        synchronize: configService.get('synchronize')
+      }),
+    }), 
+    UsersModule,
+    CategoiresModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
