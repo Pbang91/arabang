@@ -12,23 +12,24 @@ import configuration from './config/configuration';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      ignoreEnvFile: true,
-      envFilePath: ['.dev.env'],
+      // ignoreEnvFile: true,
+      // envFilePath: ['.env'],
       load: [configuration]
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => configService.get('database'),
+      // useFactory: (configService: ConfigService) => ({
+      //   type: 'mysql',
+      //   host: configService.get('host'),
+      //   port: configService.get('port'),
+      //   username: configService.get('username'),
+      //   password: configService.get('password'),
+      //   database: configService.get('database'),
+      //   entities: [Users],
+      // }),
+      // synchronize: configService.get('synchronize'),
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'mysql',
-        host: configService.get('host'),
-        port: configService.get('port'),
-        username: configService.get('username'),
-        password: configService.get('password'),
-        database: configService.get('database'),
-        entities: [Users],
-        synchronize: configService.get('synchronize')
-      }),
     }), 
     UsersModule,
     CategoiresModule,

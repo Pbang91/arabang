@@ -9,6 +9,10 @@ export class UsersService {
       @InjectRepository(Users)
       private usersRepository: Repository<Users>,
     ) {}
+
+    async create(user: Users): Promise<void>{
+      await this.usersRepository.save(user)
+    }
     
     findAll(): Promise<Users[]> {
       return this.usersRepository.find();

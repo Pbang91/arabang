@@ -5,30 +5,37 @@ export class Users {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({length: 200})
   email: string;
 
-  @Column()
+  @Column({length: 100})
   kakaoId: string;
 
-  @Column()
+  @Column({length: 100})
   image: string;
 
   @Column({ default: true })
   isValid : boolean;
 
-  @Column()
+  @Column({length: 50})
   firstName: string;
 
-  @Column()
+  @Column({length: 50})
   lastName: string;
 
-  @Column()
+  @Column({length: 20})
   phone: string;
 
-  @Column()
-  createdAt: string;
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP'
+  })
+  createdAt: Date
 
-  @Column()
-  updatedAt: string;
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP'
+  })
+  updatedAt: Date;
 }
