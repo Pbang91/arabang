@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { Users } from './users.entity';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
@@ -9,10 +10,17 @@ describe('UsersService', () => {
       providers: [UsersService],
     }).compile();
 
-    service = module.get<UsersService>(UsersService);
+    service = module.get<UsersService>(UsersService);    
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  // describe('findAll', () => {
+  //   it('should return an array', () => {
+  //     service.create()
+  //   })
+  // })
+
 });

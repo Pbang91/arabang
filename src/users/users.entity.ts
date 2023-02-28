@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 import { ApiProperty } from '@nestjs/swagger' 
+import { IsEmail, IsOptional, IsString } from "class-validator";
 
 @Entity()
 export class Users {
@@ -8,14 +9,17 @@ export class Users {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @IsEmail()
   @ApiProperty()
   @Column({length: 200})
   email: string;
 
+  @IsString()
   @ApiProperty()
   @Column({length: 100})
   kakaoId: string;
 
+  @IsString()
   @ApiProperty()
   @Column({length: 100})
   image: string;
@@ -24,16 +28,19 @@ export class Users {
   @Column({ default: true })
   isValid : boolean;
 
+  @IsString()
   @ApiProperty()
   @Column({length: 50})
   firstName: string;
 
+  @IsString()
   @ApiProperty()
   @Column({length: 50})
   lastName: string;
 
+  @IsOptional()
   @ApiProperty()
-  @Column({length: 20})
+  @Column({length: 20, default: null})
   phone: string;
 
   @ApiProperty()
