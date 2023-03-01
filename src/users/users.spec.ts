@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Users } from './users';
+import { Users } from './users.entity';
 
 describe('Users', () => {
   let provider: Users;
