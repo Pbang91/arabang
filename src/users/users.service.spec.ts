@@ -51,6 +51,7 @@ describe('UsersService', () => {
       // then
       // expect(repository.create).toHaveBeenCalledTimes(1);
       // const result = service.create(createArgs);
+      repository.findOneBy(1)
       const newUser = await service.findOneBy(1)
       console.log(newUser);
       expect(newUser.email).toEqual(createArgs.email);
