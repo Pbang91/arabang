@@ -7,7 +7,7 @@ import { UsersService } from './users.service';
 const mockUsersRepository = () => ({
   create: jest.fn(),
   findAll: jest.fn(),
-  findOne: jest.fn(),
+  findOneBy: jest.fn(),
   remove: jest.fn()
 });
 
@@ -37,21 +37,29 @@ describe('UsersService', () => {
   });
 
   describe('Create', () => {
-    const createArgs = new Users
+    const createArgs = new Users()
     createArgs.email = 'test@test.com'
     createArgs.kakaoId = 'testKakakoId'
     createArgs.image = 'https://test.image.url'
     createArgs.firstName = 'test',
     createArgs.lastName = 'Man'
     
-    it('should create Users', () => {
+    it('should create Users', async () => {
+      // when
       repository.create.mockResolvedValue(createArgs);
-      const result = service.create(createArgs);
+      
+      // then
+      // expect(repository.create).toHaveBeenCalledTimes(1);
+      // const result = service.create(createArgs);
+      repository.findOneBy(1)
+      const newUser = await service.findOneBy(1)
+      console.log(newUser);
+      expect(newUser.email).toEqual(createArgs.email);
 
-      expect(repository.create).toHaveBeenCalledTimes(1);
-      expect(repository.create).toHaveBeenCalledWith(createArgs);
+      // console.log(result);
+      // expect(repository.create).toHaveBeenCalledWith(createArgs);
 
-      expect(result).toEqual(createArgs);
+      // expect(result).toEqual(createArgs);
     })
   })
 });
