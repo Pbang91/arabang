@@ -4,7 +4,6 @@ import { IsEmail, IsOptional, IsString } from "class-validator";
 
 @Entity()
 export class Users {
-  
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
