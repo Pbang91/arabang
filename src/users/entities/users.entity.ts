@@ -2,9 +2,8 @@ import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 import { ApiProperty } from '@nestjs/swagger' 
 import { IsEmail, IsOptional, IsString } from "class-validator";
 
-@Entity()
+@Entity('users')
 export class Users {
-  
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
