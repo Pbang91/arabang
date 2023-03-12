@@ -1,5 +1,3 @@
-import { Users } from "src/users/entities/users.entity";
-
 export default () => ({
     database:{
         type: 'mysql',
@@ -8,7 +6,7 @@ export default () => ({
         username: process.env.DB_USER_NAME,
         password: process.env.DB_USER_PASSWORD,
         database: process.env.DB_DATABASE,
-        entities: [Users],
+        entities: ['dist/**/*.entity{.ts,.js}'],
         synchronize: true
     },
 })

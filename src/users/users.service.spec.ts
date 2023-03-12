@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Users } from './entities/users.entity';
+import { UserEntity } from './entities/users.entity';
 import { UsersService } from './users.service';
 
 const mockUsersRepository = () => ({
@@ -15,35 +15,33 @@ type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 
 describe('UsersService', () => {
   let service: UsersService;
-  let repository: MockRepository<Users>;
+  let repository: MockRepository<UserEntity>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersService,
         {
-          provide: getRepositoryToken(Users),
+          provide: getRepositoryToken(UserEntity),
           useValue: mockUsersRepository(),
         },
       ],
     }).compile();
 
     service = module.get(UsersService);    
-    repository = module.get(getRepositoryToken(Users));
+    repository = module.get(getRepositoryToken(UserEntity));
   });
 
   describe('Create', () => {
-    const reqeustArgs = new Users()
+    const reqeustArgs = new UserEntity()
     
     reqeustArgs.email = 'test@test.com';
-    reqeustArgs.kakaoId = 'testKakakoId';
     reqeustArgs.image = 'https://test.image.url';
-    reqeustArgs.firstName = 'test';
-    reqeustArgs.lastName = 'Man';
+    reqeustArgs.name = 'test';
     
     const savedArgs = reqeustArgs;
     
-    savedArgs.id = 1;
+    savedArgs._id = 1;
     
     it('should create Users', async () => {
       // when

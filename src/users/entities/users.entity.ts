@@ -3,10 +3,10 @@ import { ApiProperty } from '@nestjs/swagger'
 import { IsEmail, IsOptional, IsString } from "class-validator";
 
 @Entity('users')
-export class Users {
+export class UserEntity {
   @ApiProperty()
   @PrimaryGeneratedColumn()
-  id: number;
+  _id: number;
 
   @IsEmail()
   @ApiProperty()
@@ -16,26 +16,16 @@ export class Users {
   @IsString()
   @ApiProperty()
   @Column({length: 100})
-  kakaoId: string;
-
-  @IsString()
-  @ApiProperty()
-  @Column({length: 100})
   image: string;
 
   @ApiProperty()
   @Column({ default: true })
-  isValid : boolean;
+  is_valid : boolean;
 
   @IsString()
   @ApiProperty()
   @Column({length: 50})
-  firstName: string;
-
-  @IsString()
-  @ApiProperty()
-  @Column({length: 50})
-  lastName: string;
+  name: string;
 
   @IsOptional()
   @ApiProperty()
@@ -47,7 +37,7 @@ export class Users {
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP'
   })
-  createdAt: Date
+  created_at: Date
 
   @ApiProperty()
   @Column({
@@ -55,5 +45,5 @@ export class Users {
     default: () => 'CURRENT_TIMESTAMP',
     onUpdate: 'CURRENT_TIMESTAMP'
   })
-  updatedAt: Date;
+  updated_at: Date;
 }
