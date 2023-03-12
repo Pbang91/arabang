@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Users } from './users.entity';
+import { Users } from './entities/users.entity';
 import { UsersService } from './users.service';
 
 const mockUsersRepository = () => ({
-  create: jest.fn(),
+  save: jest.fn(),
   findAll: jest.fn(),
   findOneBy: jest.fn(),
   remove: jest.fn()
@@ -28,38 +28,35 @@ describe('UsersService', () => {
       ],
     }).compile();
 
-    service = module.get<UsersService>(UsersService);    
-    repository = module.get<MockRepository<Users>>(getRepositoryToken(Users));
-  });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+    service = module.get(UsersService);    
+    repository = module.get(getRepositoryToken(Users));
   });
 
   describe('Create', () => {
-    const createArgs = new Users()
-    createArgs.email = 'test@test.com'
-    createArgs.kakaoId = 'testKakakoId'
-    createArgs.image = 'https://test.image.url'
-    createArgs.firstName = 'test',
-    createArgs.lastName = 'Man'
+    const reqeustArgs = new Users()
+    
+    reqeustArgs.email = 'test@test.com';
+    reqeustArgs.kakaoId = 'testKakakoId';
+    reqeustArgs.image = 'https://test.image.url';
+    reqeustArgs.firstName = 'test';
+    reqeustArgs.lastName = 'Man';
+    
+    const savedArgs = reqeustArgs;
+    
+    savedArgs.id = 1;
     
     it('should create Users', async () => {
       // when
-      repository.create.mockResolvedValue(createArgs);
+      repository.save.mockResolvedValue(savedArgs); 
       
+      const result = await service.create(reqeustArgs);
+
       // then
-      // expect(repository.create).toHaveBeenCalledTimes(1);
-      // const result = service.create(createArgs);
-      repository.findOneBy(1)
-      const newUser = await service.findOneBy(1)
-      console.log(newUser);
-      expect(newUser.email).toEqual(createArgs.email);
+      expect(repository.save).toHaveBeenCalledTimes(1);
+      expect(repository.save).toHaveBeenCalledWith(savedArgs);
+      expect(result.email).toEqual(reqeustArgs.email);
 
-      // console.log(result);
-      // expect(repository.create).toHaveBeenCalledWith(createArgs);
-
-      // expect(result).toEqual(createArgs);
+      expect(result).toEqual(savedArgs);
     })
   })
 });

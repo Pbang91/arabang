@@ -1,4 +1,4 @@
-import { Users } from "src/users/users.entity";
+import { Users } from "src/users/entities/users.entity";
 
 export default () => ({
     database:{
