@@ -5,8 +5,8 @@ export class CreateUserDto {
     readonly type: string;
     
     @IsString()
-    readonly access_token: string;
+    readonly accessToken: string;
 
     @IsString()
-    readonly refresh_token: string;
+    readonly refreshToken: string;
 }

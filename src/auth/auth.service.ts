@@ -9,7 +9,7 @@ export class AuthService {
         @Inject(authConfig.KEY) private config: ConfigType<typeof authConfig>,
     ){}
 
-    login(email: string) {
+    async login(email: string) {
         return jwt.sign({email}, this.config.jwtSecret, {
             expiresIn: '7d',
             audience: 'arabang',

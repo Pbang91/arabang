@@ -27,7 +27,7 @@ export class UsersController {
     @Post()
     @ApiOperation({summary: '신규 유저 생성 API', description: '신규 유저를 생성합니다.'})
     @ApiCreatedResponse({description: '신규 생성한 유저의 토큰을 반환합니다.', type: LoginUserDto, status: 201})
-    async create(@Body() data: CreateUserDto) {
-        return await this.usersService.create(data);
+    async create(@Body() createUserDto: CreateUserDto) {
+        return await this.usersService.create(createUserDto);
     }
 }

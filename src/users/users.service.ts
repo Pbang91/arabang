@@ -14,11 +14,11 @@ export class UsersService {
     ) {}
 
     async create(createUserDto: CreateUserDto) {
-      const { user } = await this.socialService.create(createUserDto.type, createUserDto.access_token, createUserDto.refresh_token)
-      await this.usersRepository.save(user);
+      const user = await this.socialService.create(createUserDto);
+      await this.usersRepository.save(user.user);
 
       return {
-        accessTokne : '???'
+        accessTokne : user.accessToken
       } 
     }
     

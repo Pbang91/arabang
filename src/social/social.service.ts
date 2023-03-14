@@ -1,28 +1,30 @@
 import axios from 'axios';
 
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { SocialEntity } from './entities/social.entity';
 import { UserEntity } from 'src/users/entities/users.entity';
 import { AuthService } from 'src/auth/auth.service';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class SocialService {
     constructor(
         @InjectRepository(SocialEntity)
-        private socialRepository: Repository<SocialEntity>,
+        // private socialRepository: Repository<SocialEntity>,
         private dataSource: DataSource,
         private authService: AuthService,
     ){}
 
-    async create(type: string, accessToken: string, refreshToken: string) {
+    async create(createUserDto: CreateUserDto) {
+        const { type, accessToken, refreshToken } = createUserDto;
         const user = await this.saveSocial(type, accessToken, refreshToken);
-        // const arabangToken = this.authService.login(user.email)
+        const arabangToken = await this.authService.login(user.email);
 
         return {
             user,
-            // accessToken: arabangToken
+            accessToken: arabangToken
         }
     }
 
@@ -39,7 +41,7 @@ export class SocialService {
             social.access_token = accessToken;
             social.refresh_token = refreshToken;
             
-            await this.socialRepository.save(social)
+            await queryRunner.manager.save(social)
             
             const userData = await this.getUserInformation(type, accessToken);
             
@@ -65,27 +67,23 @@ export class SocialService {
     async getUserInformation(type: string, accessToken: string) {
         switch(type) {
             case 'kakao':
-                const url = 'https://kapi.kakao.com/v2/user/me'
-                let userProfile;
-                const userInfo = axios.get('https://kapi.kakao.com/v2/user/me', {headers: {Authorization: `Bearer ${accessToken}`}}).then((res) => {
-                console.log(res);
-                return res
-                }).then(res => {
-                    console.log(res);
-                    userProfile = res.data
+                const url = 'https://kapi.kakao.com/v2/user/me';
+
+                const result = await axios.get(url, {
+                    headers: {"Authorization": `Bearer ${accessToken}`}
                 });
-
-                console.log(userInfo);
-
-                if (!userInfo) throw new BadRequestException();
                 
-                // const userProfile = userInfo.data.kakao_account;
+                if (result.status !== 200) {
+                    throw new UnauthorizedException();
+                }
+
+                const userInfo = result.data;
 
                 const userData = {
-                    email: userProfile.email,
-                    image: userProfile.profile.thumbnail_image_url,
-                    name: userProfile.name,
-                    phone: userProfile.phone_number?userProfile.phone_number:null,
+                    email: userInfo.kakao_account.email,
+                    image: userInfo.kakao_account.profile.thumbnail_image_url,
+                    name: userInfo.name,
+                    phone: userInfo.kakao_account.phone_number?userInfo.kakao_account.phone_number:null,
                 }
 
                 return userData
